@@ -1,30 +1,34 @@
 package volvox.beans;
 
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+
 
 @Entity
-@Table(name="text")
 public class Text {
     @Id
-    @Column(name="id")
-    private final long id;
+    @GeneratedValue(strategy= GenerationType.AUTO)
+    private long id;
+    private String content;
 
-    @Column(name="content")
-    private final String content;
-
-    public Text(long id, String content) {
-        this.id = id;
+    public Text(String content) {
         this.content = content;
     }
 
     public long getId() {
         return id;
     }
-
     public String getContent() {
         return content;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
     }
 }
