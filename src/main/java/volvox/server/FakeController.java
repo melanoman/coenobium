@@ -14,7 +14,6 @@ import volvox.repository.TextRepository;
 public class FakeController {
 
     private static final String template = "Hello, %s!";
-    private final AtomicLong counter = new AtomicLong();
 
     @Autowired
     private TextRepository textRepository;
