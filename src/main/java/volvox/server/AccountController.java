@@ -11,7 +11,7 @@ public class AccountController {
     @Autowired
     private PersonRepository personRepository;
 
-    @RequestMapping("/login")
+    @RequestMapping("/login2")
     public String login(@RequestParam(value="hash")String hash) {
         return "Permission denied"; //TODO replace this with spring security
     }
