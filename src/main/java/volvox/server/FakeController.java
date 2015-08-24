@@ -24,4 +24,9 @@ public class FakeController {
         textRepository.save(text);
         return text;
     }
+
+    @RequestMapping("/sit")
+    public String sit(@RequestParam(value="tableName", defaultValue="Lobby")String tableName) {
+
+    }
 }
