@@ -21,4 +21,8 @@ public interface User {
 
         public String getName() { return bot.getName(); }
     }
+
+    class NullUser implements User {
+        public String getName() { return ""; }
+    }
 }
