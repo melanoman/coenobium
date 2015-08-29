@@ -27,6 +27,7 @@ public class FakeController {
 
     @RequestMapping("/sit")
     public String sit(@RequestParam(value="tableName", defaultValue="Lobby")String tableName) {
-
+        // TODO actually write this method
+        return "please implement sit()";
     }
 }
