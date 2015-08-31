@@ -3,4 +3,4 @@ window1% mysqld
 window2% mysql --user=root mysql  
 > CREATE DATABASE hack;  
 > CREATE USER 'volox'@'localhost' identified by 'cilia';  
-> GRANT ALL PRIVLEGES on \*.\* to 'volvox'@localhost' with grant option;  
+> GRANT ALL PRIVILEGES on \*.\* to 'volvox'@'localhost' with grant option;  

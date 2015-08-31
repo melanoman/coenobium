@@ -39,3 +39,4 @@
         <!-- templates to be automatically updated when modified.        -->
         <property name="cacheable" value="true" />
     </bean>
+</beans>
