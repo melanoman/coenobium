@@ -1,5 +1,54 @@
+.topcorner {
+  margin-top: 50px;
+  margin-left: 50px;
+}
+
+.formline {
+  margin-top: 10px;
+  margin-left: 50px;
+}
+
+.bigbutton {
+  width: 100px;
+  height: 30px;
+  background: linear-gradient(#afafaf, #808080);
+  border-color: #a5a5a5;
+  font-size: 16px;
+}
+
+#passbox {
+  margin-left: 11px;
+}
+
 #loginbutton {
-  margin-left: 20px;
-  min-width: 100px;
-  min-height: 50px;
+  width: 123px;
+  margin-left: 81px;
+}
+
+.graybox {
+  border-color: #776e65;
+  border-width: 1px;
+}
+
+.softtext {
+  color: #2f2f2f;
+}
+
+.offgraybackground {
+  background-color: #F0F0F0;
+}
+
+.errorred {
+  position: relative;
+  top: 5px;
+  margin-bottom: 20px;
+  color: red;
+}
+
+.confirmblue {
+  position: relative;
+  left: 5px;
+  top: 5px;
+  margin-bottom: 20px;
+  color: blue;
 }
