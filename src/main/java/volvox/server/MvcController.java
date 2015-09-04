@@ -1,6 +1,7 @@
 package volvox.server;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
@@ -14,4 +15,15 @@ public class MvcController extends WebMvcConfigurerAdapter {
         registry.addViewController("/login").setViewName("login");
         registry.addViewController("/lobby").setViewName("lobby");
     }
+
+    @Override
+    public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        registry.addResourceHandler("/assets/**")
+                .addResourceLocations("classpath:/assets/");
+        registry.addResourceHandler("/css/**")
+                .addResourceLocations("/css/");
+        registry.addResourceHandler("/img/**")
+                .addResourceLocations("/img/");
+        registry.addResourceHandler("/js/**")
+                .addResourceLocations("/js/");    }
 }
