@@ -7,7 +7,16 @@
 <h1>Welcome!</h1>
 <p th:text="#{example.test1}">fallback text</p>
 <p th:text="#{example.test2}">fallback text 2</p>
-<p>List of public tables goes here.</p>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+    </tr>
+    <tr th:each="table : ${tables}">
+        <td th:text="${table.id}">The ID</td>
+        <td th:text="${table.name}">The table name</td>
+    </tr>
+</table>
 <p>Lobby Chat goes here.</p>
 </body>
 </html>
