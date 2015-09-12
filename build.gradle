@@ -30,6 +30,7 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-thymeleaf")
     compile("org.springframework.boot:spring-boot-starter-security")
     compile("mysql:mysql-connector-java")
+    compile group: 'com.google.guava', name: 'guava', version: '14.0'
 }
 
 task wrapper(type: Wrapper) {
