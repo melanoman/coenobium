@@ -11,6 +11,7 @@ public class GameTable {
     @GeneratedValue(strategy= GenerationType.AUTO)
     private long id; // guaranteed unique
     private String name; // may not be unique
+    private long lobbyId;
 
     public long getId() {
         return id;
@@ -27,4 +28,8 @@ public class GameTable {
     public void setName(String name) {
         this.name = name;
     }
+
+    public long getLobbyId() { return lobbyId; }
+
+    public void setLobbyId(long lobbyId) { this.lobbyId = lobbyId; }
 }
