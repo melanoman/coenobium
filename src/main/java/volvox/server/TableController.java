@@ -24,11 +24,9 @@ public class TableController {
 
     @RequestMapping("/table/list")
     public ModelAndView showTables() {
-        ModelAndView mav = new ModelAndView("lobby");
-        mav.addObject("tables", tables.findAll());
         GameTable newTable = new GameTable();
         newTable.setName("New Table Name");
-        mav.addObject("gameTable", newTable);
+        ModelAndView mav = lobbyMAV(newTable);
         return mav;
     }
 
@@ -56,12 +54,15 @@ public class TableController {
         List<GameTable> victim = tables.findById(id);
         if(victim.size() > 0) tables.delete(victim.get(0));
         else return tableError("Cannot delete table", "Table does not exist");
-        ModelAndView mav = new ModelAndView("lobby");
-        mav.addObject("tables", tables.findAll());
         GameTable blankTable = new GameTable();
         blankTable.setName("r00lage");
-        mav.addObject("gameTable", blankTable);
+        return lobbyMAV(blankTable);
+    }
 
+    private ModelAndView lobbyMAV(GameTable table) {
+        ModelAndView mav = new ModelAndView("lobby");
+        mav.addObject("tables", tables.findAll());
+        mav.addObject("gameTable", table);
         return mav;
     }
 
