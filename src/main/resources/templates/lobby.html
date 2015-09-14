@@ -17,6 +17,12 @@
         <td th:text="${table.name}">The table name</td>
     </tr>
 </table>
+
+<form action="#" th:action="@{/table/add}" th:object="${gameTable}" method="post">
+    <input type="text" th:field="*{name}" />
+    <input type="submit" />
+</form>
+
 <p>Lobby Chat goes here.</p>
 </body>
 </html>
