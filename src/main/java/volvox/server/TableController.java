@@ -30,11 +30,11 @@ public class TableController {
     @RequestMapping(value = "/table/add", method = RequestMethod.POST)
     public ModelAndView addTable(@ModelAttribute GameTable gameTable) {
         if (gameTable == null || gameTable.getName() == null || gameTable.getName().length() < 1) {
-            return tableError("Table Name is required");
+            return tableError("Cannot create table", "Table Name is required");
         }
         List<GameTable> old = tables.findByName(gameTable.getName());
         // TODO allow same name in different lobby
-        if (old.size() > 0) return tableError("Table already exists");
+        if (old.size() > 0) return tableError("Cannot create table", "Table already exists");
 
         GameTable table = new GameTable();
         table.setName(gameTable.getName());
@@ -50,7 +50,7 @@ public class TableController {
         long id = Long.parseLong(idstr);
         List<GameTable> victim = tables.findById(id);
         if(victim.size() > 0) tables.delete(victim.get(0));
-        else return tableError("Can't delete, doesn't exist.");
+        else return tableError("Cannot delete table", "Table does not exist");
         ModelAndView mav = new ModelAndView("lobby");
         mav.addObject("tables", tables.findAll());
         GameTable blankTable = new GameTable();
@@ -60,8 +60,9 @@ public class TableController {
         return mav;
     }
 
-    private ModelAndView tableError(String msg) {
+    private ModelAndView tableError(String hdr, String msg) {
         ModelAndView error = new ModelAndView("tableError");
+        error.addObject("header", hdr);
         error.addObject("message", msg);
         return error;
     }
