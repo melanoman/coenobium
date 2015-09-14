@@ -7,4 +7,5 @@ import volvox.beans.GameTable;
 
 public interface GameTableRepository extends CrudRepository<GameTable, Long> {
     List<GameTable> findByName(String name);
+    List<GameTable> findById(Long id);
 }
