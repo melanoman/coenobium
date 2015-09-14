@@ -15,6 +15,10 @@
     <tr th:each="table : ${tables}">
         <td th:text="${table.id}">The ID</td>
         <td th:text="${table.name}">The table name</td>
+        <td><form th:action="@{/table/delete/__${table.id}__}" th:object="${table.name}" method="post">
+                <button action="submit">X</button>
+            </form>
+        </td>
     </tr>
 </table>
 

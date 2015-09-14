@@ -2,10 +2,7 @@ package volvox.server;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 import volvox.beans.GameTable;
 import volvox.repository.GameTableRepository;
@@ -36,14 +33,30 @@ public class TableController {
             return tableError("Table Name is required");
         }
         List<GameTable> old = tables.findByName(gameTable.getName());
+        // TODO allow same name in different lobby
         if (old.size() > 0) return tableError("Table already exists");
 
         GameTable table = new GameTable();
         table.setName(gameTable.getName());
         table.setLobbyId(-1L);
         tables.save(table);
-        ModelAndView mav = new ModelAndView(("table"));
+        ModelAndView mav = new ModelAndView("table");
         mav.addObject("table", table);
+        return mav;
+    }
+
+    @RequestMapping(value = "/table/delete/{id}", method = RequestMethod.POST)
+    public ModelAndView deleteTable(@PathVariable(value="id") String idstr) {
+        long id = Long.parseLong(idstr);
+        List<GameTable> victim = tables.findById(id);
+        if(victim.size() > 0) tables.delete(victim.get(0));
+        else return tableError("Can't delete, doesn't exist.");
+        ModelAndView mav = new ModelAndView("lobby");
+        mav.addObject("tables", tables.findAll());
+        GameTable blankTable = new GameTable();
+        blankTable.setName("r00lage");
+        mav.addObject("gameTable", blankTable);
+
         return mav;
     }
 
