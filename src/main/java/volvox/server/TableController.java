@@ -2,6 +2,8 @@ package volvox.server;
 
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -63,6 +65,11 @@ public class TableController {
         ModelAndView mav = new ModelAndView("lobby");
         mav.addObject("tables", tables.findAll());
         mav.addObject("gameTable", table);
+
+        String name = getName();
+        mav.addObject("welcome", "Welcome "+name+"!");
+        mav.addObject("isadmin", isAdmin(name));
+
         return mav;
     }
 
@@ -71,5 +78,15 @@ public class TableController {
         error.addObject("header", hdr);
         error.addObject("message", msg);
         return error;
+    }
+
+    // TODO make this a public method in some kind of util place
+    private String getName() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return auth.getName(); //get logged in username
+    }
+
+    private boolean isAdmin(String name) {
+        return name.compareTo("rxx") == 0 || name.compareTo("mel") == 0;
     }
 }
