@@ -87,6 +87,6 @@ public class TableController {
     }
 
     private boolean isAdmin(String name) {
-        return name.compareTo("rxx") == 0 || name.compareTo("mel") == 0;
+        return "rxx".equals(name) || "mel".equals(name);
     }
 }
