@@ -7,13 +7,14 @@ import javax.persistence.Id;
 import javax.persistence.GeneratedValue;
 
 @Entity
-public class Person {
+public class User {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private long id;
     private String email;
     private String name;
     private String passwordHash;
+    private String clazz;
 
     public long getId() {
         return id;
@@ -45,5 +46,13 @@ public class Person {
 
     public void setPasswordHash(String passwordHash) {
         this.passwordHash = passwordHash;
+    }
+
+    public String getClazz() {
+        return clazz;
+    }
+
+    public void setClazz(String clazz) {
+        this.clazz = clazz;
     }
 }
