@@ -13,8 +13,10 @@ public class User {
     private long id;
     private String email;
     private String name;
-    private String passwordHash;
     private String clazz;
+
+    //TODO move this somewhere safe and salt-hash the login
+    private String password;
 
     public long getId() {
         return id;
@@ -40,19 +42,19 @@ public class User {
         this.name = name;
     }
 
-    public String getPasswordHash() {
-        return passwordHash;
-    }
-
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
-    }
-
     public String getClazz() {
         return clazz;
     }
 
     public void setClazz(String clazz) {
         this.clazz = clazz;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
