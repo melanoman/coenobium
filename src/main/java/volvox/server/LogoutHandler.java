@@ -1,10 +1,7 @@
 package volvox.server;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.web.authentication.logout.SimpleUrlLogoutSuccessHandler;
-import volvox.beans.User;
-import volvox.repository.UserRepository;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -13,11 +10,11 @@ import java.io.IOException;
 
 public class LogoutHandler extends SimpleUrlLogoutSuccessHandler {
 
-    @Autowired
-    RoomService roomService;
-
-    @Autowired
-    UserRepository userRepository;
+    //TODO figure out why these won't autowire
+    //@Autowire
+    //RoomService roomService;
+    //@Autowire
+    //UserRepository userRepository;
 
     public LogoutHandler() {
         this.setDefaultTargetUrl("/");
@@ -25,8 +22,10 @@ public class LogoutHandler extends SimpleUrlLogoutSuccessHandler {
 
     @Override
     public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        User user = userRepository.findUserByName(authentication.getName());
-        if (user != null) roomService.exitAllRooms(user.getId());
+        String name = authentication.getName();
+        //User user = userRepository.findUserByName(name);
+        //if (user != null) roomService.exitAllRooms(user.getId());
+
         super.onLogoutSuccess(request, response, authentication);
     }
 }
