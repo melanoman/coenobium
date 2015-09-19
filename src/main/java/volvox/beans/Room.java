@@ -6,7 +6,7 @@ import javax.persistence.Id;
 import javax.persistence.Entity;
 
 @Entity
-public class GameTable {
+public class Room {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private long id; // guaranteed unique

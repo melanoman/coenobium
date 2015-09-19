@@ -10,37 +10,39 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.ModelAndView;
-import volvox.beans.GameTable;
-import volvox.repository.GameTableRepository;
-import volvox.repository.SeatingRepository;
+import volvox.beans.Room;
+import volvox.repository.RoomRepository;
+import volvox.repository.EntryRepository;
 
 /**
  * This controller is responsible for CRUD of tables including un/seating humans and bots. It is *not*
  * responsible for messaging at the table nor journaling messages for offline humans
  */
 @RestController
-public class TableController {
-    @Autowired GameTableRepository tables;
-    @Autowired SeatingRepository seats;
+public class RoomController {
+    @Autowired
+    RoomRepository tables;
+    @Autowired
+    EntryRepository seats;
 
     @RequestMapping("/table/list")
     public ModelAndView showTables() {
-        GameTable newTable = new GameTable();
+        Room newTable = new Room();
         newTable.setName("New Table Name");
         ModelAndView mav = lobbyMAV(newTable);
         return mav;
     }
 
     @RequestMapping(value = "/table/add", method = RequestMethod.POST)
-    public ModelAndView addTable(@ModelAttribute GameTable gameTable) {
+    public ModelAndView addTable(@ModelAttribute Room gameTable) {
         if (gameTable == null || gameTable.getName() == null || gameTable.getName().length() < 1) {
             return tableError("Cannot create table", "Table Name is required");
         }
-        List<GameTable> old = tables.findByName(gameTable.getName());
+        List<Room> old = tables.findByName(gameTable.getName());
         // TODO allow same name in different lobby
         if (old.size() > 0) return tableError("Cannot create table", "Table already exists");
 
-        GameTable table = new GameTable();
+        Room table = new Room();
         table.setName(gameTable.getName());
         table.setLobbyId(-1L);
         tables.save(table);
@@ -52,15 +54,15 @@ public class TableController {
     @RequestMapping(value = "/table/delete/{id}", method = RequestMethod.POST)
     public ModelAndView deleteTable(@PathVariable(value="id") String idstr) {
         long id = Long.parseLong(idstr);
-        List<GameTable> victim = tables.findById(id);
+        List<Room> victim = tables.findById(id);
         if(victim.size() > 0) tables.delete(victim.get(0));
         else return tableError("Cannot delete table", "Table does not exist");
-        GameTable blankTable = new GameTable();
+        Room blankTable = new Room();
         blankTable.setName("r00lage");
         return lobbyMAV(blankTable);
     }
 
-    private ModelAndView lobbyMAV(GameTable table) {
+    private ModelAndView lobbyMAV(Room table) {
         ModelAndView mav = new ModelAndView("lobby");
         mav.addObject("tables", tables.findAll());
         mav.addObject("gameTable", table);
