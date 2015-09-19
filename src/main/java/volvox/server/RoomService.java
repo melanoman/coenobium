@@ -8,6 +8,7 @@ import volvox.beans.User;
 import volvox.repository.EntryRepository;
 import volvox.repository.UserRepository;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -43,10 +44,12 @@ public class RoomService {
         entryRepository.save(entry);
     }
 
+    @Transactional
     public void exitRoom(Long roomId, Long userId) {
         entryRepository.deleteByRoomIdAndUserId(roomId, userId);
     }
 
+    @Transactional
     public void exitAllRooms(Long userId) {
         entryRepository.deleteByUserId(userId);
     }

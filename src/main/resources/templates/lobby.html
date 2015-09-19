@@ -21,6 +21,12 @@
         </td>
     </tr>
 </table>
+
+<form th:if="${isadmin}" action="#" th:action="@{/table/add}" th:object="${gameTable}" method="post">
+    <input type="text" th:field="*{name}" />
+    <input type="submit" />
+</form>
+
 <p>Users</p>
 <table>
     <tr>
@@ -32,11 +38,6 @@
         <td th:text="${user.name}">The table name</td>
     </tr>
 </table>
-
-<form th:if="${isadmin}" action="#" th:action="@{/table/add}" th:object="${gameTable}" method="post">
-    <input type="text" th:field="*{name}" />
-    <input type="submit" />
-</form>
 
 <p>Lobby Chat goes here.</p>
 

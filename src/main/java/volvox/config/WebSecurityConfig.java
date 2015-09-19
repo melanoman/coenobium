@@ -15,6 +15,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     SecurityService securityService;
 
+    @Autowired
+    LogoutHandler logoutHandler;
+
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
@@ -24,7 +27,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .and()
                 .formLogin().loginPage("/login").permitAll()
                 .and()
-                .logout().logoutSuccessHandler(new LogoutHandler()).permitAll();
+                .logout().logoutSuccessHandler(logoutHandler).permitAll();
     }
 
     @Autowired
