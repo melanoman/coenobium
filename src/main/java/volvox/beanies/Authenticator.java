@@ -1,14 +1,22 @@
-package volvox.beans;
+package volvox.beanies;
 
 import com.google.common.collect.Lists;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
+import volvox.beans.User;
 
 import java.util.Collection;
 
-//TODO this isn't a bean, move it out of the beans directory
-public class Authenticator extends User implements UserDetails {
+/**
+ * Wrapper around User to satisfy the security interface and leave room for secure password storage elsewhere.
+ */
+public class Authenticator implements UserDetails {
+    private final User user;
+
+    public Authenticator(User user) {
+        this.user = user;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -19,8 +27,11 @@ public class Authenticator extends User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return getName();
+        return user.getName();
     }
+
+    @Override
+    public String getPassword() { return user.getPassword(); }
 
     @Override
     public boolean isAccountNonExpired() {
