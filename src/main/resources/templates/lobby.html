@@ -21,6 +21,17 @@
         </td>
     </tr>
 </table>
+<p>Users</p>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>UserName</th>
+    </tr>
+    <tr th:each="user : ${users}">
+        <td th:text="${user.id}">The ID</td>
+        <td th:text="${user.name}">The table name</td>
+    </tr>
+</table>
 
 <form th:if="${isadmin}" action="#" th:action="@{/table/add}" th:object="${gameTable}" method="post">
     <input type="text" th:field="*{name}" />

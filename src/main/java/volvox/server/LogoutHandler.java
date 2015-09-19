@@ -20,7 +20,7 @@ public class LogoutHandler extends SimpleUrlLogoutSuccessHandler {
     UserRepository userRepository;
 
     public LogoutHandler() {
-        this.setDefaultTargetUrl("/logout");
+        this.setDefaultTargetUrl("/");
     }
 
     @Override
