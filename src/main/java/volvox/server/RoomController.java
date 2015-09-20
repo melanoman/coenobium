@@ -84,7 +84,6 @@ public class RoomController {
             user.setClazz("Builtinuser class placeholder");
             user = userRepository.save(user);
         }
-        userRepository.save(user);
 
         mav.addObject("name", name);
         mav.addObject("isadmin", isAdmin(name));
