@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<link rel="stylesheet" type="text/css" href="../assets/css/button.css"/>
 <head>
     <title>Main Lobby</title>
 </head>
@@ -14,7 +15,7 @@
         <td th:text="${table.id}">The ID</td>
         <td th:text="${table.name}">The table name</td>
         <td><form th:if="${isadmin}" th:action="@{/table/delete/__${table.id}__}" th:object="${table.name}" method="post">
-                <button action="submit">X</button>
+                <button class="delbutton" action="submit" />
             </form>
         </td>
     </tr>
