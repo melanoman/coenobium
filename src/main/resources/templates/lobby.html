@@ -4,7 +4,7 @@
     <title>Main Lobby</title>
 </head>
 <body>
-<h1 th:text="${welcome}">Welcome!</h1>
+<h1 th:text="#{lobby.welcome(${name})}">Welcome!</h1>
 <table>
     <tr>
         <th th:text="#{lobby.roomId}">ID</th>

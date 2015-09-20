@@ -86,7 +86,7 @@ public class RoomController {
         }
         userRepository.save(user);
 
-        mav.addObject("welcome", "Welcome " + name + "!");
+        mav.addObject("name", name);
         mav.addObject("isadmin", isAdmin(name));
 
         roomService.enterRoom(-1L, user.getId(), true);
