@@ -53,9 +53,7 @@ public class RoomController {
         table.setName(gameTable.getName());
         table.setLobbyId(-1L);
         roomRepository.save(table);
-        ModelAndView mav = new ModelAndView("table");
-        mav.addObject("gameRoom", table);
-        return mav;
+        return showTables();
     }
 
     @RequestMapping(value = "/room/delete/{id}", method = RequestMethod.POST)
@@ -69,7 +67,7 @@ public class RoomController {
         return lobbyMAV(blankTable);
     }
 
-    @RequestMapping(value = "/room/move/{newRoomId}/{oldRoomId}/{playerId}", method = RequestMethod.POST)
+    @RequestMapping(value = "/room/move/{newRoomId}/{oldRoomId}/{playerId}")
     public ModelAndView enterRoom(@PathVariable(value="newRoomId") String newRoomIsStr,
                                   @PathVariable(value="oldRoomId") String oldRoomIdStr,
                                   @PathVariable(value="playerId") String playerIdStr) {
@@ -78,8 +76,15 @@ public class RoomController {
         long playerId = Long.parseLong(playerIdStr);
         roomService.exitRoom(oldRoomId, playerId);
         roomService.enterRoom(newRoomId, playerId, true);
+        return roomView(newRoomId);
+    }
+
+    public ModelAndView roomView(Long id) {
         ModelAndView mav = new ModelAndView("room");
-        mav.addObject("room", roomRepository.findById(newRoomId));
+        Room room = roomRepository.findById(id).get(0);
+        mav.addObject("room", room);
+        List<User> users = roomService.findUsersByRoom(id, false);
+        mav.addObject("users", users);
         return mav;
     }
 
@@ -101,6 +106,7 @@ public class RoomController {
 
         mav.addObject("name", name);
         mav.addObject("isadmin", isAdmin(name));
+        mav.addObject("userId", ""+user.getId());
 
         roomService.enterRoom(-1L, user.getId(), true);
         List<User> users = roomService.findUsersByRoom(-1L, false);

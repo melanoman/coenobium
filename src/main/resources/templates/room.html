@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<head>
+    <title>Table View</title>
+</head>
+<body>
+
+<body>
+<p th:text="${room.name}">table name goes here</p>
+<p th:text="${room.id}">table id goes here</p>
+<p th:text="${room.lobbyId}">lobby id goes here</p>
+<a th:href="@{/room/list}" href="room/list">return to lobby</a>
+</body>
+<!-- TODO make this into a fragment and share with lobby view -->
+<p>Users</p>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>UserName</th>
+    </tr>
+    <tr th:each="user : ${users}">
+        <td th:text="${user.id}">The ID</td>
+        <td th:text="${user.name}">The table name</td>
+    </tr>
+</table>
+</body>
+</html>
