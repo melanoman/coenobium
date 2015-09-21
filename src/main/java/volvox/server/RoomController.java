@@ -76,10 +76,11 @@ public class RoomController {
         long playerId = Long.parseLong(playerIdStr);
         roomService.exitRoom(oldRoomId, playerId);
         roomService.enterRoom(newRoomId, playerId, true);
-        return roomView(newRoomId);
+        return new ModelAndView("redirect:/room/view/"+newRoomId);
     }
 
-    public ModelAndView roomView(Long id) {
+    @RequestMapping(value = "/room/view/{id}")
+    public ModelAndView roomView(@PathVariable(value = "id") Long id) {
         ModelAndView mav = new ModelAndView("room");
         Room room = roomRepository.findById(id).get(0);
         mav.addObject("room", room);
