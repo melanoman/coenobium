@@ -32,47 +32,61 @@ public class RoomController {
     UserRepository userRepository;
 
 
-    @RequestMapping("/table/list")
+    @RequestMapping("/room/list")
     public ModelAndView showTables() {
-        Room newTable = new Room();
-        newTable.setName("New Table Name");
-        ModelAndView mav = lobbyMAV(newTable);
+        Room room = new Room();
+        room.setName("New Table Name");
+        ModelAndView mav = lobbyMAV(room);
         return mav;
     }
 
-    @RequestMapping(value = "/table/add", method = RequestMethod.POST)
+    @RequestMapping(value = "/room/add", method = RequestMethod.POST)
     public ModelAndView addTable(@ModelAttribute Room gameTable) {
         if (gameTable == null || gameTable.getName() == null || gameTable.getName().length() < 1) {
-            return tableError("Cannot create table", "Table Name is required");
+            return roomError("Cannot create table", "Room Name is required");
         }
         List<Room> old = roomRepository.findByName(gameTable.getName());
         // TODO allow same name in different lobby
-        if (old.size() > 0) return tableError("Cannot create table", "Table already exists");
+        if (old.size() > 0) return roomError("Cannot create table", "Room already exists");
 
         Room table = new Room();
         table.setName(gameTable.getName());
         table.setLobbyId(-1L);
         roomRepository.save(table);
         ModelAndView mav = new ModelAndView("table");
-        mav.addObject("table", table);
+        mav.addObject("gameRoom", table);
         return mav;
     }
 
-    @RequestMapping(value = "/table/delete/{id}", method = RequestMethod.POST)
+    @RequestMapping(value = "/room/delete/{id}", method = RequestMethod.POST)
     public ModelAndView deleteTable(@PathVariable(value="id") String idstr) {
         long id = Long.parseLong(idstr);
         List<Room> victim = roomRepository.findById(id);
         if(victim.size() > 0) roomRepository.delete(victim.get(0));
-        else return tableError("Cannot delete table", "Table does not exist");
+        else return roomError("Cannot delete table", "Table does not exist");
         Room blankTable = new Room();
         blankTable.setName("r00lage");
         return lobbyMAV(blankTable);
     }
 
-    private ModelAndView lobbyMAV(Room table) {
+    @RequestMapping(value = "/room/move/{newRoomId}/{oldRoomId}/{playerId}", method = RequestMethod.POST)
+    public ModelAndView enterRoom(@PathVariable(value="newRoomId") String newRoomIsStr,
+                                  @PathVariable(value="oldRoomId") String oldRoomIdStr,
+                                  @PathVariable(value="playerId") String playerIdStr) {
+        long oldRoomId = Long.parseLong(oldRoomIdStr);
+        long newRoomId = Long.parseLong(newRoomIsStr);
+        long playerId = Long.parseLong(playerIdStr);
+        roomService.exitRoom(oldRoomId, playerId);
+        roomService.enterRoom(newRoomId, playerId, true);
+        ModelAndView mav = new ModelAndView("room");
+        mav.addObject("room", roomRepository.findById(newRoomId));
+        return mav;
+    }
+
+    private ModelAndView lobbyMAV(Room room) {
         ModelAndView mav = new ModelAndView("lobby");
-        mav.addObject("tables", roomRepository.findAll());
-        mav.addObject("gameTable", table);
+        mav.addObject("rooms", roomRepository.findAll());
+        mav.addObject("gameRoom", room);
 
         String name = getUsername();
         User user = userRepository.findUserByName(name);
@@ -95,8 +109,8 @@ public class RoomController {
         return mav;
     }
 
-    private ModelAndView tableError(String hdr, String msg) {
-        ModelAndView error = new ModelAndView("tableError");
+    private ModelAndView roomError(String hdr, String msg) {
+        ModelAndView error = new ModelAndView("roomError");
         error.addObject("header", hdr);
         error.addObject("message", msg);
         return error;
