@@ -69,9 +69,6 @@ public class RoomController {
         List<Room> victim = roomRepository.findById(id);
         if(victim.size() > 0) roomRepository.delete(victim.get(0));
         else return roomError("Cannot delete table", "Table does not exist");
-        Room blankTable = new Room();
-        blankTable.setName("r00lage");
-        blankTable.setCode("testCode");
         return new ModelAndView("redirect:/room/list");
     }
 
@@ -140,6 +137,6 @@ public class RoomController {
 
     // TODO make this a property of the lobby room
     private boolean isAdmin(String name) {
-        return "rxx".equals(name) || "mel".equals(name);
+        return "admin".equals(name);
     }
 }
