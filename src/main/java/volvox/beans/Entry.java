@@ -10,7 +10,6 @@ public class Entry {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private long id;
-    // TODO combine people and bots into User class. For, consider these fields either or. -1 means unused
     private long userId = -1;
     private long roomId = -1;
     private boolean valid = true;

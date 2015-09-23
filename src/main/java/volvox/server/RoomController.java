@@ -1,6 +1,8 @@
 package volvox.server;
 
 import java.util.List;
+
+import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -31,11 +33,15 @@ public class RoomController {
     @Autowired
     UserRepository userRepository;
 
+    // TODO load KINDS from data
+    public static List<String> KINDS = Lists.newArrayList("chat", "lobby");
+
 
     @RequestMapping("/room/list")
     public ModelAndView showTables() {
         Room room = new Room();
-        room.setName("New Table Name");
+        room.setName("New Room Name");
+        room.setCode("mainTestCode");
         ModelAndView mav = lobbyMAV(room);
         return mav;
     }
@@ -51,9 +57,10 @@ public class RoomController {
 
         Room table = new Room();
         table.setName(gameTable.getName());
+        table.setCode(gameTable.getCode());
         table.setLobbyId(-1L);
         roomRepository.save(table);
-        return showTables();
+        return new ModelAndView("redirect:/room/list");
     }
 
     @RequestMapping(value = "/room/delete/{id}", method = RequestMethod.POST)
@@ -64,7 +71,8 @@ public class RoomController {
         else return roomError("Cannot delete table", "Table does not exist");
         Room blankTable = new Room();
         blankTable.setName("r00lage");
-        return lobbyMAV(blankTable);
+        blankTable.setCode("testCode");
+        return new ModelAndView("redirect:/room/list");
     }
 
     @RequestMapping(value = "/room/move/{newRoomId}/{oldRoomId}/{playerId}")
@@ -108,6 +116,7 @@ public class RoomController {
         mav.addObject("name", name);
         mav.addObject("isadmin", isAdmin(name));
         mav.addObject("userId", ""+user.getId());
+        mav.addObject("kinds", KINDS);
 
         roomService.enterRoom(-1L, user.getId(), true);
         List<User> users = roomService.findUsersByRoom(-1L, false);

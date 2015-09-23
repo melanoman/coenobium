@@ -12,6 +12,7 @@ public class Room {
     private long id; // guaranteed unique
     private String name; // may not be unique
     private long lobbyId;
+    private String code;
 
     public long getId() {
         return id;
@@ -32,4 +33,8 @@ public class Room {
     public long getLobbyId() { return lobbyId; }
 
     public void setLobbyId(long lobbyId) { this.lobbyId = lobbyId; }
+
+    public String getCode() { return code; }
+
+    public void setCode(String code) { this.code = code; }
 }
