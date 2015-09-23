@@ -15,7 +15,7 @@
     <tr th:each="room : ${rooms}">
         <td th:text="${room.id}">The ID</td>
         <td> <a th:text="${room.name}" th:href="@{/room/move/__${room.id}__/-1/__${userId}__}">The table name</a></td>
-        <td th:text="${room.code}">The View</td>
+        <td th:text="#{lobby.view+${room.code}}">The View</td>
         <td>
             <form th:if="${isadmin}" th:action="@{/room/delete/__${room.id}__}" th:object="${room.name}" method="post">
                 <button class="delbutton" action="submit" />
