@@ -8,9 +8,9 @@
 <h1 th:text="#{lobby.welcome(${name})}">Welcome!</h1>
 <table>
     <tr>
-        <th th:text="#{lobby.roomId}">ID</th>
-        <th th:text="#{lobby.roomName}">Name</th>
-        <th>View</th>
+        <th align="left" th:text="#{lobby.roomId}">ID</th>
+        <th align="left" th:text="#{lobby.roomName}">Name</th>
+        <th align="left" th:text="#{lobby.view}">View</th>
     </tr>
     <tr th:each="room : ${rooms}">
         <td th:text="${room.id}">The ID</td>
