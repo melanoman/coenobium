@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
-<link rel="stylesheet" type="text/css" href="../assets/css/button.css"/>
+<link rel="stylesheet" type="text/css" th:href="@{/assets/css/button.css}"/>
 <head>
     <title>Main Lobby</title>
 </head>
@@ -27,7 +27,7 @@
 <form th:if="${isadmin}" action="#" th:action="@{/room/add}" th:object="${gameRoom}" method="post">
     <input type="text" th:field="*{name}" />
     <select name="kind" th:field="*{code}">
-        <option th:each="kind : ${kinds}" th:text="${kind}" th:value="${kind}">kind</option>
+        <option th:each="kind : ${kinds}" th:text="#{lobby.view+${kind}}" th:value="${kind}">kind</option>
     </select>
     <input type="submit" />
 </form>
