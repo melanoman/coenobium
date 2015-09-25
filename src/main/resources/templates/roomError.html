@@ -4,7 +4,7 @@
     <title>Room Error</title>
 </head>
 <body>
-<p th:text="${header}">Unable to create table</p>
-<p th:text="${message}">Error Message</p>
+<p th:text="#{lobby.error.+${header}}">Unable to create table</p>
+<p th:text="#{lobby.error.+${message}}">Error Message</p>
 </body>
 </html>

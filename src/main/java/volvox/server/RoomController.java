@@ -49,11 +49,11 @@ public class RoomController {
     @RequestMapping(value = "/room/add", method = RequestMethod.POST)
     public ModelAndView addTable(@ModelAttribute Room gameTable) {
         if (gameTable == null || gameTable.getName() == null || gameTable.getName().length() < 1) {
-            return roomError("Cannot create table", "Room Name is required");
+            return roomError("create", "roomname");
         }
         List<Room> old = roomRepository.findByName(gameTable.getName());
         // TODO allow same name in different lobby
-        if (old.size() > 0) return roomError("Cannot create table", "Room already exists");
+        if (old.size() > 0) return roomError("create", "roomexists");
 
         Room table = new Room();
         table.setName(gameTable.getName());
@@ -68,7 +68,7 @@ public class RoomController {
         long id = Long.parseLong(idstr);
         List<Room> victim = roomRepository.findById(id);
         if(victim.size() > 0) roomRepository.delete(victim.get(0));
-        else return roomError("Cannot delete table", "Table does not exist");
+        else return roomError("delete", "roomdne");
         return new ModelAndView("redirect:/room/list");
     }
 
