@@ -29,14 +29,16 @@ public class MessageController {
         try {
             topic = Long.parseLong(topicStr);
         } catch (NumberFormatException ex) {
-            return messageError("parse failure: topicId", -1L);
+            // TODO parse from message.properties in display
+            return messageError("parseTopic", -1L);
         }
 
         Long limit = null;
         try {
             limit = Long.parseLong(limitStr);
         } catch (NumberFormatException ex) {
-            return messageError("parseFailure: idLimit", topic);
+            // TODO parse from message.properties in display
+            return messageError("parseIdLimit", topic);
         }
         //TODO check topic permissions
         return messageService.readSince(topic, limit);
