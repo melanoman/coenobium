@@ -2,11 +2,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 
 <head>
-    <title>Volvox Game Server</title>
+    <title th:text="#{main.title}">Volvox Game Server</title>
     <link style="text/css" rel ="stylesheet" href="@{/assets/css/test.css}" />
 </head>
 <body>
-<h1>Welcome!</h1>
+<h1 th:text="#{main.welcome}">Welcome!</h1>
 
 <p><a th:href="@{/room/list}">Enter the mainline lobby</a></p>
 </body>

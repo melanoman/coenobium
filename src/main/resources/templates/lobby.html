@@ -8,7 +8,7 @@
 <h1 th:text="#{lobby.welcome(${name})}">Welcome!</h1>
 <table>
     <tr>
-        <th align="left" th:text="#{lobby.roomId}">ID</th>
+        <th align="left" th:text="#{header.id}">ID</th>
         <th align="left" th:text="#{lobby.roomName}">Name</th>
         <th align="left" th:text="#{lobby.view}">View</th>
     </tr>
@@ -32,11 +32,11 @@
     <input type="submit" />
 </form>
 
-<p>Users</p>
+<p th:text="#{header.users}">Users</p>
 <table>
     <tr>
-        <th th:text="#{lobby.userId}">ID</th>
-        <th th:text="#{lobby.userName}">UserName</th>
+        <th th:text="#{header.id}">ID</th>
+        <th th:text="#{header.username}">UserName</th>
     </tr>
     <tr th:each="user : ${users}">
         <td th:text="${user.id}">The ID</td>

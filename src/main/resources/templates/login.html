@@ -3,7 +3,7 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
     <link rel="stylesheet" type="text/css" href="assets/css/style.css"/>
     <head>
-        <title>Coenobium - Login</title>
+        <title th:text="#{login.title}">Coenobium - Login</title>
     </head>
     <body class="offgraybackground">
         <form th:action="@{/login}" method="post">
