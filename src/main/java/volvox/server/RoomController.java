@@ -86,12 +86,24 @@ public class RoomController {
 
     @RequestMapping(value = "/room/view/{id}")
     public ModelAndView roomView(@PathVariable(value = "id") Long id) {
-        ModelAndView mav = new ModelAndView("room");
-        Room room = roomRepository.findById(id).get(0);
-        mav.addObject("room", room);
+        Room room = (id == -1) ? mainLobby() : roomRepository.findById(id).get(0);
         List<User> users = roomService.findUsersByRoom(id, false);
+        ModelAndView mav = new ModelAndView(room.getCode());
+        mav.addObject("room", room);
         mav.addObject("users", users);
         return mav;
+    }
+
+    //TODO make roomService.getRoom( ) and move this there
+    //fake object for main lobby not really in the database, use id:-1 to avoid autoId collision
+    private Room mainLobby() {
+        Room lobby = new Room();
+        lobby.setCode("lobby");
+        lobby.setId(-1);
+        lobby.setName("Volvox");
+        // the main lobby doesn't have a real parent
+        lobby.setLobbyId(-2);
+        return lobby;
     }
 
     private ModelAndView lobbyMAV(Room room) {
