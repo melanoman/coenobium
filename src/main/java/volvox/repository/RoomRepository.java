@@ -8,4 +8,5 @@ import volvox.beans.Room;
 public interface RoomRepository extends CrudRepository<Room, Long> {
     List<Room> findByName(String name);
     List<Room> findById(Long id);
+    List<Room> findByLobbyId(Long id);
 }

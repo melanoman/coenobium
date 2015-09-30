@@ -2,6 +2,8 @@ package volvox.server;
 
 import com.google.common.collect.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -51,7 +53,22 @@ public class SecurityService implements UserDetailsService {
         user.setEmail(email);
         user.setPassword(password);
         //TODO replace this with a human implementation of the bot interface
-        user.setClazz(null);
+        user.setClazz("dynamicuser placeholder");
         return userRepository.save(user);
+    }
+
+    public User getCurrentUser() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        String name =  auth.getName();
+        User user = userRepository.findUserByName(name);
+        if (user == null) {
+            user = new User();
+            user.setName(name);
+            user.setPassword(name);
+            // TODO replace with built in user class
+            user.setClazz("Builtinuser class placeholder");
+            user = userRepository.save(user);
+        }
+        return user;
     }
 }

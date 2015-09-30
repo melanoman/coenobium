@@ -39,15 +39,13 @@ public class RoomController {
 
     @RequestMapping("/room/list")
     public ModelAndView showTables() {
-        Room room = new Room();
-        room.setName("New Room Name");
-        room.setCode("mainTestCode");
-        ModelAndView mav = lobbyMAV(room);
+        ModelAndView mav = lobbyMAV(-1L);
         return mav;
     }
 
-    @RequestMapping(value = "/room/add", method = RequestMethod.POST)
-    public ModelAndView addTable(@ModelAttribute Room gameTable) {
+    @RequestMapping(value = "/room/add/{lobbyId}", method = RequestMethod.POST)
+    public ModelAndView addTable(@ModelAttribute Room gameTable, @PathVariable(value="lobbyId") String lobbyIdStr) {
+        long lobbyId = Long.parseLong(lobbyIdStr);
         if (gameTable == null || gameTable.getName() == null || gameTable.getName().length() < 1) {
             return roomError("create", "roomname");
         }
@@ -58,18 +56,19 @@ public class RoomController {
         Room table = new Room();
         table.setName(gameTable.getName());
         table.setCode(gameTable.getCode());
-        table.setLobbyId(-1L);
+        table.setLobbyId(lobbyId);
         roomRepository.save(table);
-        return new ModelAndView("redirect:/room/list");
+        return new ModelAndView("redirect:/room/view/"+lobbyIdStr);
     }
 
-    @RequestMapping(value = "/room/delete/{id}", method = RequestMethod.POST)
-    public ModelAndView deleteTable(@PathVariable(value="id") String idstr) {
+    @RequestMapping(value = "/room/delete/{id}/{lobbyId}", method = RequestMethod.POST)
+    public ModelAndView deleteTable(@PathVariable(value="id") String idstr, @PathVariable(value="lobbyId") String lobbyIdStr) {
         long id = Long.parseLong(idstr);
+        long lobbyId = Long.parseLong(lobbyIdStr);
         List<Room> victim = roomRepository.findById(id);
         if(victim.size() > 0) roomRepository.delete(victim.get(0));
         else return roomError("delete", "roomdne");
-        return new ModelAndView("redirect:/room/list");
+        return lobbyMAV(lobbyId);
     }
 
     @RequestMapping(value = "/room/move/{newRoomId}/{oldRoomId}/{playerId}")
@@ -88,7 +87,14 @@ public class RoomController {
     public ModelAndView roomView(@PathVariable(value = "id") Long id) {
         Room room = (id == -1) ? mainLobby() : roomRepository.findById(id).get(0);
         List<User> users = roomService.findUsersByRoom(id, false);
-        ModelAndView mav = new ModelAndView(room.getCode());
+        ModelAndView mav = null;
+        switch(room.getCode()) {
+            case "lobby":
+                mav = lobbyMAV(id);
+                break;
+            default:
+                mav = new ModelAndView(room.getCode());
+        }
         mav.addObject("room", room);
         mav.addObject("users", users);
         return mav;
@@ -106,11 +112,16 @@ public class RoomController {
         return lobby;
     }
 
-    private ModelAndView lobbyMAV(Room room) {
+    private ModelAndView lobbyMAV(long lobbyId) {
+        Room room = new Room();
+        room.setName("New Room Name");
+        room.setCode("mainTestCode");
+
         ModelAndView mav = new ModelAndView("lobby");
-        mav.addObject("rooms", roomRepository.findAll());
+        mav.addObject("rooms", roomRepository.findByLobbyId(lobbyId));
         mav.addObject("gameRoom", room);
 
+        //TODO move this to security service
         String name = getUsername();
         User user = userRepository.findUserByName(name);
         if (user == null) {
@@ -126,9 +137,10 @@ public class RoomController {
         mav.addObject("isadmin", isAdmin(name));
         mav.addObject("userId", ""+user.getId());
         mav.addObject("kinds", KINDS);
+        mav.addObject("lobbyId", ""+lobbyId);
 
-        roomService.enterRoom(-1L, user.getId(), true);
-        List<User> users = roomService.findUsersByRoom(-1L, false);
+        roomService.enterRoom(lobbyId, user.getId(), true);
+        List<User> users = roomService.findUsersByRoom(lobbyId, false);
         mav.addObject("users", users);
 
         return mav;
