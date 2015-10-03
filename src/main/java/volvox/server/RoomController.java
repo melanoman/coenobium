@@ -40,6 +40,9 @@ public class RoomController {
     @RequestMapping("/room/list")
     public ModelAndView showTables() {
         ModelAndView mav = lobbyMAV(-1L);
+        mav.addObject("self", mainLobby());
+        mav.addObject("users", roomService.findUsersByRoom(-1L, false));
+        mav.addObject("chats", Lists.newArrayList("main message", "fake message"));
         return mav;
     }
 
@@ -95,7 +98,7 @@ public class RoomController {
             default:
                 mav = new ModelAndView(room.getCode());
         }
-        mav.addObject("room", room);
+        mav.addObject("self", room);
         mav.addObject("users", users);
         mav.addObject("chats", Lists.newArrayList("test message", "another message"));
         return mav;
@@ -109,7 +112,7 @@ public class RoomController {
         lobby.setId(-1);
         lobby.setName("Volvox");
         // the main lobby doesn't have a real parent
-        lobby.setLobbyId(-2);
+        lobby.setLobbyId(-1);
         return lobby;
     }
 

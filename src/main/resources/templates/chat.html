@@ -1,13 +1,9 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <head>
-    <title th:text="#{Chat.title}">Room View</title>
+    <title th:text="${self.name}">Chat Room View</title>
 </head>
 <body>
-<p th:text="${room.name}">table name goes here</p>
-<p th:text="${room.id}">table id goes here</p>
-<p th:text="${room.lobbyId}">lobby id goes here</p>
-<a th:href="@{/room/list}" href="room/list">return to lobby</a>
 <!-- TODO make this into a fragment and share with other room views -->
 <p>Chat</p>
 <div th:each="chat : ${chats}" th:text="${chat}">chat message</div>
@@ -22,5 +18,6 @@
         <td th:text="${user.name}">The table name</td>
     </tr>
 </table>
+<a th:href="@{/room/view/__${self.lobbyId}__}" href="room/list">return to lobby</a>
 </body>
 </html>
