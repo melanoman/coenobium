@@ -8,8 +8,9 @@
 <p th:text="${room.id}">table id goes here</p>
 <p th:text="${room.lobbyId}">lobby id goes here</p>
 <a th:href="@{/room/list}" href="room/list">return to lobby</a>
-<!-- TODO display and update chat messages here -->
 <!-- TODO make this into a fragment and share with other room views -->
+<p>Chat</p>
+<div th:each="chat : ${chats}" th:text="${chat}">chat message</div>
 <p>Users</p>
 <table>
     <tr>

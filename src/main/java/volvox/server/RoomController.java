@@ -97,6 +97,7 @@ public class RoomController {
         }
         mav.addObject("room", room);
         mav.addObject("users", users);
+        mav.addObject("chats", Lists.newArrayList("test message", "another message"));
         return mav;
     }
 
