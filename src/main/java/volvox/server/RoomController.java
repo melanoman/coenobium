@@ -48,7 +48,7 @@ public class RoomController {
         ModelAndView mav = lobbyMAV(-1L);
         mav.addObject("self", mainLobby());
         mav.addObject("users", roomService.findUsersByRoom(-1L, false));
-        mav.addObject("chats", Lists.newArrayList("main message", "fake message"));
+        mav.addObject("chats", messageService.readSince("chat_-1", -1L));
         mav.addObject("chatText", emptyText());
         mav.addObject("chatTopic", "chat_-1");
         return mav;
@@ -114,7 +114,7 @@ public class RoomController {
         }
         mav.addObject("self", room);
         mav.addObject("users", users);
-        mav.addObject("chats", asStrings(messageService.readSince("chat_" + id, -1L)));
+        mav.addObject("chats", messageService.readSince("chat_" + id, -1L));
         mav.addObject("chatText", emptyText());
         mav.addObject("chatTopic", "chat_" + id);
         return mav;

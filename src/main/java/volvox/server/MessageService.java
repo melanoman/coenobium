@@ -19,10 +19,6 @@ public class MessageService {
         return messageRepostory.findByTopicAndIdGreaterThan(topic, lastRead);
     }
 
-    public List<Message> readTopic(String topic, Long lastRead) {
-        return messageRepostory.findByTopic(topic);
-    }
-
     public Message postMessage(String topic, Map<String, String> text) {
         Message msg = new Message();
         msg.setTopic(topic);
