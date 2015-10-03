@@ -12,7 +12,8 @@ public class Message {
     @Id
     @GeneratedValue(strategy= GenerationType.AUTO)
     private long id;
-    private long topicId;
+    private String topic;
+
     // this is a map so we don't need custom parsers all over from simple stuff
     // example1: { "type" -> "chat", "sender" -> "jeff", "msg" -> "Hello, Derrick" }
     // example2: { "type" -> "move", "from" -> "a2", "to" -> "a4" }
@@ -35,11 +36,11 @@ public class Message {
         this.id = id;
     }
 
-    public long getTopicId() {
-        return topicId;
+    public String getTopic() {
+        return topic;
     }
 
-    public void setTopicId(long topicId) {
-        this.topicId = topicId;
+    public void setTopic(String topic) {
+        this.topic = topic;
     }
 }

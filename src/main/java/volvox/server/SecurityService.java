@@ -71,4 +71,9 @@ public class SecurityService implements UserDetailsService {
         }
         return user;
     }
+
+    public String getUsername() {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return auth.getName(); //get logged in username
+    }
 }

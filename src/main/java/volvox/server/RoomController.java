@@ -1,8 +1,10 @@
 package volvox.server;
 
 import java.util.List;
+import java.util.Map;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,7 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.servlet.ModelAndView;
+import volvox.beans.Message;
 import volvox.beans.Room;
+import volvox.beans.StringHolder;
 import volvox.beans.User;
 import volvox.repository.RoomRepository;
 import volvox.repository.EntryRepository;
@@ -25,11 +29,13 @@ import volvox.repository.UserRepository;
 @RestController
 public class RoomController {
     @Autowired
-    EntryRepository entryRepository;
+    MessageService messageService;
     @Autowired
     RoomRepository roomRepository;
     @Autowired
     RoomService roomService;
+    @Autowired
+    SecurityService securityService;
     @Autowired
     UserRepository userRepository;
 
@@ -43,7 +49,15 @@ public class RoomController {
         mav.addObject("self", mainLobby());
         mav.addObject("users", roomService.findUsersByRoom(-1L, false));
         mav.addObject("chats", Lists.newArrayList("main message", "fake message"));
+        mav.addObject("chatText", emptyText());
+        mav.addObject("chatTopic", "chat_-1");
         return mav;
+    }
+
+    private StringHolder emptyText() {
+        StringHolder holder = new StringHolder();
+        holder.setData("");
+        return holder;
     }
 
     @RequestMapping(value = "/room/add/{lobbyId}", method = RequestMethod.POST)
@@ -70,7 +84,7 @@ public class RoomController {
         long lobbyId = Long.parseLong(lobbyIdStr);
         List<Room> victim = roomRepository.findById(id);
         if(victim.size() > 0) roomRepository.delete(victim.get(0));
-        else return roomError("delete", "roomdne");
+        else return roomError("delete", "roomDNE");
         return lobbyMAV(lobbyId);
     }
 
@@ -100,8 +114,20 @@ public class RoomController {
         }
         mav.addObject("self", room);
         mav.addObject("users", users);
-        mav.addObject("chats", Lists.newArrayList("test message", "another message"));
+        mav.addObject("chats", asStrings(messageService.readSince("chat_" + id, -1L)));
+        mav.addObject("chatText", emptyText());
+        mav.addObject("chatTopic", "chat_" + id);
         return mav;
+    }
+
+    private List<String> asStrings(List<Message> in) {
+        System.out.println("in.size() = "+in.size());
+        List<String> out = Lists.newArrayList();
+        for(Message msg:in) {
+            String data = msg.getText().get("msg");
+            if (data != null) out.add(data);
+        }
+        return out;
     }
 
     //TODO make roomService.getRoom( ) and move this there
@@ -126,7 +152,7 @@ public class RoomController {
         mav.addObject("gameRoom", room);
 
         //TODO move this to security service
-        String name = getUsername();
+        String name = securityService.getUsername();
         User user = userRepository.findUserByName(name);
         if (user == null) {
             user = new User();
@@ -158,10 +184,7 @@ public class RoomController {
     }
 
     // TODO make this a public method in some kind of util place
-    private String getUsername() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        return auth.getName(); //get logged in username
-    }
+
 
     // TODO make this a property of the lobby room
     private boolean isAdmin(String name) {
