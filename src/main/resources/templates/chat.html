@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<link rel="stylesheet" type="text/css" th:href="@{/assets/css/chat.css}"/>
 <head>
     <title th:text="${self.name}">Chat Room View</title>
 </head>
 <body>
 <!-- TODO make this into a fragment and share with other room views -->
 <p>Chat</p>
-<div th:each="chat : ${chats}">
+<div th:each="chat : ${chats}" class="chatline">
     <span class="chatsender" th:text="${chat.text[sender]}"/>
     <span class="chatmsg" th:text="${chat.text[msg]}"/>
 </div>

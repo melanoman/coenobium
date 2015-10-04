@@ -1,0 +1,17 @@
+.chatmsg {
+  position: relative;
+  padding: 8px;
+  margin: 1em 0 3em;
+  color: #000;
+  background: #f3961c;
+  border-radius: 7px;
+  background: linear-gradient(top, #f9d835, #f3961c);
+}
+
+.chatsender {
+  margin-right: 15px;
+}
+
+.chatline {
+  margin-bottom: 25px;
+}
