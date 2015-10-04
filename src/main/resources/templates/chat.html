@@ -6,7 +6,10 @@
 <body>
 <!-- TODO make this into a fragment and share with other room views -->
 <p>Chat</p>
-<div th:each="chat : ${chats}" th:text="${chat.text[msg]}">chat message</div>
+<div th:each="chat : ${chats}">
+    <span class="chatsender" th:text="${chat.text[sender]}"/>
+    <span class="chatmsg" th:text="${chat.text[msg]}"/>
+</div>
 <form th:object="${chatText}" th:action="@{/message/post/__${chatTopic}__/__${self.id}__}" method = "post" >
     <input type = "text" th:field="*{data}"/>
     <input type="submit"/>
