@@ -85,7 +85,7 @@ public class RoomController {
         List<Room> victim = roomRepository.findById(id);
         if(victim.size() > 0) roomRepository.delete(victim.get(0));
         else return roomError("delete", "roomDNE");
-        return lobbyMAV(lobbyId);
+        return new ModelAndView("redirect:/room/view/"+lobbyId);
     }
 
     @RequestMapping(value = "/room/move/{newRoomId}/{oldRoomId}/{playerId}")
