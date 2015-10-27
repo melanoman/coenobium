@@ -50,7 +50,7 @@
     <input type="submit" value="Sign Out"/>
 </form>
 
-<a th:href="@{/room/view/__${self.lobbyId}__}" href="room/list">return to lobby</a>
+<a th:if="${self.id} != -1" th:href="@{/room/move/__${self.lobbyId}__/__${self.id}__/__${userId}__}" href="room/list">return to lobby</a>
 
 </body>
 </html>
