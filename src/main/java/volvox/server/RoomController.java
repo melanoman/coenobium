@@ -103,17 +103,15 @@ public class RoomController {
     @RequestMapping(value = "/room/view/{id}")
     public ModelAndView roomView(@PathVariable(value = "id") Long id) {
         Room room = (id == -1) ? mainLobby() : roomRepository.findById(id).get(0);
-        List<User> users = roomService.findUsersByRoom(id, false);
         ModelAndView mav = null;
         switch(room.getCode()) {
             case "lobby":
                 mav = lobbyMAV(id);
                 break;
             default:
-                mav = new ModelAndView(room.getCode());
+                mav = makeMAV(room.getLobbyId(), room.getCode());
         }
         mav.addObject("self", room);
-        mav.addObject("users", users);
         mav.addObject("chats", messageService.readSince("chat_" + id, -1L));
         mav.addObject("chatText", emptyText());
         mav.addObject("chatTopic", "chat_" + id);
@@ -143,12 +141,18 @@ public class RoomController {
     }
 
     private ModelAndView lobbyMAV(long lobbyId) {
+        ModelAndView mav = makeMAV(lobbyId, "lobby");
+        mav.addObject("rooms", roomRepository.findByLobbyId(lobbyId));
+        return mav;
+    }
+
+    private ModelAndView makeMAV(long lobbyId, String type) {
         Room room = new Room();
         room.setName("New Room Name");
         room.setCode("mainTestCode");
 
-        ModelAndView mav = new ModelAndView("lobby");
-        mav.addObject("rooms", roomRepository.findByLobbyId(lobbyId));
+        ModelAndView mav = new ModelAndView(type);
+        //TODO how is <gameRoom> different from <self>, instantiated in roomView()?
         mav.addObject("gameRoom", room);
 
         //TODO move this to security service
