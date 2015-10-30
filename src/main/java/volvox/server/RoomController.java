@@ -45,8 +45,9 @@ public class RoomController {
 
     @RequestMapping("/room/list")
     public ModelAndView showTables() {
-        ModelAndView mav = lobbyMAV(-1L);
-        mav.addObject("self", mainLobby());
+        Room ml = mainLobby();
+        ModelAndView mav = makeMAV(ml);
+        mav.addObject("self", ml);
         mav.addObject("users", roomService.findUsersByRoom(-1L, false));
         mav.addObject("chats", messageService.readSince("chat_-1", -1L));
         mav.addObject("chatText", emptyText());
@@ -103,23 +104,13 @@ public class RoomController {
     @RequestMapping(value = "/room/view/{id}")
     public ModelAndView roomView(@PathVariable(value = "id") Long id) {
         Room room = (id == -1) ? mainLobby() : roomRepository.findById(id).get(0);
-        ModelAndView mav = null;
-        switch(room.getCode()) {
-            case "lobby":
-                mav = lobbyMAV(id);
-                break;
-            default:
-                mav = makeMAV(room.getLobbyId(), room.getCode());
-        }
-        mav.addObject("self", room);
-        mav.addObject("chats", messageService.readSince("chat_" + id, -1L));
-        mav.addObject("chatText", emptyText());
-        mav.addObject("chatTopic", "chat_" + id);
+        ModelAndView mav = makeMAV(room);
+
         return mav;
     }
 
     private List<String> asStrings(List<Message> in) {
-        System.out.println("in.size() = "+in.size());
+        System.out.println("in.size() = " + in.size());
         List<String> out = Lists.newArrayList();
         for(Message msg:in) {
             String data = msg.getText().get("msg");
@@ -140,20 +131,13 @@ public class RoomController {
         return lobby;
     }
 
-    private ModelAndView lobbyMAV(long lobbyId) {
-        ModelAndView mav = makeMAV(lobbyId, "lobby");
-        mav.addObject("rooms", roomRepository.findByLobbyId(lobbyId));
+    private ModelAndView lobbyMAV(ModelAndView mav, long id) {
+        mav.addObject("rooms", roomRepository.findByLobbyId(id));
         return mav;
     }
 
-    private ModelAndView makeMAV(long lobbyId, String type) {
-        Room room = new Room();
-        room.setName("New Room Name");
-        room.setCode("mainTestCode");
-
-        ModelAndView mav = new ModelAndView(type);
-        //TODO how is <gameRoom> different from <self>, instantiated in roomView()?
-        mav.addObject("gameRoom", room);
+    private ModelAndView makeMAV(Room room) {
+        ModelAndView mav = new ModelAndView(room.getCode());
 
         //TODO move this to security service
         String name = securityService.getUsername();
@@ -171,11 +155,24 @@ public class RoomController {
         mav.addObject("isadmin", isAdmin(name));
         mav.addObject("userId", ""+user.getId());
         mav.addObject("kinds", KINDS);
-        mav.addObject("lobbyId", ""+lobbyId);
+        mav.addObject("lobbyId", ""+room.getLobbyId());
 
-        roomService.enterRoom(lobbyId, user.getId(), true);
-        List<User> users = roomService.findUsersByRoom(lobbyId, false);
+        roomService.enterRoom(room.getId(), user.getId(), true);
+        List<User> users = roomService.findUsersByRoom(room.getId(), false);
         mav.addObject("users", users);
+
+        mav.addObject("self", room);
+        mav.addObject("chats", messageService.readSince("chat_" + room.getId(), -1L));
+        mav.addObject("chatText", emptyText());
+        mav.addObject("chatTopic", "chat_" + room.getId());
+
+        switch(room.getCode()) {
+            case "lobby":
+                mav = lobbyMAV(mav, room.getId());
+                break;
+            default:
+                // do nothing
+        }
 
         return mav;
     }
