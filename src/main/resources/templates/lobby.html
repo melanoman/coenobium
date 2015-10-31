@@ -25,7 +25,7 @@
     </tr>
 </table>
 
-<form th:if="${isadmin}" action="#" th:action="@{/room/add/__${self.id}__}" th:object="${self}" method="post">
+<form th:if="${isadmin}" action="#" th:action="@{/room/add/__${self.id}__}" th:object="${newRoom}" method="post">
     <input type="text" th:field="*{name}" />
     <select name="kind" th:field="*{code}">
         <option th:each="kind : ${kinds}" th:text="#{lobby.view+${kind}}" th:value="${kind}">kind</option>

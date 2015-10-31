@@ -1,1 +1,1 @@
-alert("Hello world!");
+// currently blank

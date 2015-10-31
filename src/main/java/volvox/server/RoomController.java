@@ -1,13 +1,9 @@
 package volvox.server;
 
 import java.util.List;
-import java.util.Map;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,7 +15,6 @@ import volvox.beans.Room;
 import volvox.beans.StringHolder;
 import volvox.beans.User;
 import volvox.repository.RoomRepository;
-import volvox.repository.EntryRepository;
 import volvox.repository.UserRepository;
 
 /**
@@ -131,8 +126,11 @@ public class RoomController {
         return lobby;
     }
 
-    private ModelAndView lobbyMAV(ModelAndView mav, long id) {
+    private ModelAndView addLobbyInfo(ModelAndView mav, long id) {
         mav.addObject("rooms", roomRepository.findByLobbyId(id));
+        Room newRoom = new Room();
+        newRoom.setName("New Room Name");
+        mav.addObject("newRoom", newRoom);
         return mav;
     }
 
@@ -168,7 +166,7 @@ public class RoomController {
 
         switch(room.getCode()) {
             case "lobby":
-                mav = lobbyMAV(mav, room.getId());
+                mav = addLobbyInfo(mav, room.getId());
                 break;
             default:
                 // do nothing
