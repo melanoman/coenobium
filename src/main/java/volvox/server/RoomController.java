@@ -1,13 +1,9 @@
 package volvox.server;
 
 import java.util.List;
-import java.util.Map;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,7 +15,6 @@ import volvox.beans.Room;
 import volvox.beans.StringHolder;
 import volvox.beans.User;
 import volvox.repository.RoomRepository;
-import volvox.repository.EntryRepository;
 import volvox.repository.UserRepository;
 
 /**
@@ -45,8 +40,9 @@ public class RoomController {
 
     @RequestMapping("/room/list")
     public ModelAndView showTables() {
-        ModelAndView mav = lobbyMAV(-1L);
-        mav.addObject("self", mainLobby());
+        Room ml = mainLobby();
+        ModelAndView mav = makeMAV(ml);
+        mav.addObject("self", ml);
         mav.addObject("users", roomService.findUsersByRoom(-1L, false));
         mav.addObject("chats", messageService.readSince("chat_-1", -1L));
         mav.addObject("chatText", emptyText());
@@ -103,25 +99,13 @@ public class RoomController {
     @RequestMapping(value = "/room/view/{id}")
     public ModelAndView roomView(@PathVariable(value = "id") Long id) {
         Room room = (id == -1) ? mainLobby() : roomRepository.findById(id).get(0);
-        List<User> users = roomService.findUsersByRoom(id, false);
-        ModelAndView mav = null;
-        switch(room.getCode()) {
-            case "lobby":
-                mav = lobbyMAV(id);
-                break;
-            default:
-                mav = new ModelAndView(room.getCode());
-        }
-        mav.addObject("self", room);
-        mav.addObject("users", users);
-        mav.addObject("chats", messageService.readSince("chat_" + id, -1L));
-        mav.addObject("chatText", emptyText());
-        mav.addObject("chatTopic", "chat_" + id);
+        ModelAndView mav = makeMAV(room);
+
         return mav;
     }
 
     private List<String> asStrings(List<Message> in) {
-        System.out.println("in.size() = "+in.size());
+        System.out.println("in.size() = " + in.size());
         List<String> out = Lists.newArrayList();
         for(Message msg:in) {
             String data = msg.getText().get("msg");
@@ -142,14 +126,16 @@ public class RoomController {
         return lobby;
     }
 
-    private ModelAndView lobbyMAV(long lobbyId) {
-        Room room = new Room();
-        room.setName("New Room Name");
-        room.setCode("mainTestCode");
+    private ModelAndView addLobbyInfo(ModelAndView mav, long id) {
+        mav.addObject("rooms", roomRepository.findByLobbyId(id));
+        Room newRoom = new Room();
+        newRoom.setName("New Room Name");
+        mav.addObject("newRoom", newRoom);
+        return mav;
+    }
 
-        ModelAndView mav = new ModelAndView("lobby");
-        mav.addObject("rooms", roomRepository.findByLobbyId(lobbyId));
-        mav.addObject("gameRoom", room);
+    private ModelAndView makeMAV(Room room) {
+        ModelAndView mav = new ModelAndView(room.getCode());
 
         //TODO move this to security service
         String name = securityService.getUsername();
@@ -167,11 +153,24 @@ public class RoomController {
         mav.addObject("isadmin", isAdmin(name));
         mav.addObject("userId", ""+user.getId());
         mav.addObject("kinds", KINDS);
-        mav.addObject("lobbyId", ""+lobbyId);
+        mav.addObject("lobbyId", ""+room.getLobbyId());
 
-        roomService.enterRoom(lobbyId, user.getId(), true);
-        List<User> users = roomService.findUsersByRoom(lobbyId, false);
+        roomService.enterRoom(room.getId(), user.getId(), true);
+        List<User> users = roomService.findUsersByRoom(room.getId(), false);
         mav.addObject("users", users);
+
+        mav.addObject("self", room);
+        mav.addObject("chats", messageService.readSince("chat_" + room.getId(), -1L));
+        mav.addObject("chatText", emptyText());
+        mav.addObject("chatTopic", "chat_" + room.getId());
+
+        switch(room.getCode()) {
+            case "lobby":
+                mav = addLobbyInfo(mav, room.getId());
+                break;
+            default:
+                // do nothing
+        }
 
         return mav;
     }

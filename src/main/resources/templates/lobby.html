@@ -2,10 +2,11 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <link rel="stylesheet" type="text/css" th:href="@{/assets/css/button.css}"/>
 <head>
-    <title>Main Lobby</title>
+    <title th:text="${self.name}">lobby name</title>
 </head>
 <body>
 <h1 th:text="#{lobby.welcome(${name})}">Welcome!</h1>
+<h1 th:text="${self.name}">room name</h1>
 <table>
     <tr>
         <th align="left" th:text="#{header.id}">ID</th>
@@ -14,17 +15,17 @@
     </tr>
     <tr th:each="room : ${rooms}">
         <td th:text="${room.id}">The ID</td>
-        <td> <a th:text="${room.name}" th:href="@{/room/move/__${room.id}__/__${lobbyId}__/__${userId}__}">The table name</a></td>
+        <td> <a th:text="${room.name}" th:href="@{/room/move/__${room.id}__/__${self.id}__/__${userId}__}">The table name</a></td>
         <td th:text="#{lobby.view+${room.code}}">The View</td>
         <td>
-            <form th:if="${isadmin}" th:action="@{/room/delete/__${room.id}__/__${lobbyId}__}" th:object="${room.name}" method="post">
+            <form th:if="${isadmin}" th:action="@{/room/delete/__${room.id}__/__${self.id}__}" th:object="${room.name}" method="post">
                 <button class="delbutton" action="submit" />
             </form>
         </td>
     </tr>
 </table>
 
-<form th:if="${isadmin}" action="#" th:action="@{/room/add/__${lobbyId}__}" th:object="${gameRoom}" method="post">
+<form th:if="${isadmin}" action="#" th:action="@{/room/add/__${self.id}__}" th:object="${newRoom}" method="post">
     <input type="text" th:field="*{name}" />
     <select name="kind" th:field="*{code}">
         <option th:each="kind : ${kinds}" th:text="#{lobby.view+${kind}}" th:value="${kind}">kind</option>
@@ -50,7 +51,7 @@
     <input type="submit" value="Sign Out"/>
 </form>
 
-<a th:href="@{/room/view/__${self.lobbyId}__}" href="room/list">return to lobby</a>
+<a th:if="${self.id} != -1" th:href="@{/room/move/__${lobbyId}__/__${self.id}__/__${userId}__}" href="room/list">return to lobby</a>
 
 </body>
 </html>

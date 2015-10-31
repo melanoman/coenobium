@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <link rel="stylesheet" type="text/css" th:href="@{/assets/css/chat.css}"/>
+<script th:src="@{/assets/js/chat.js}"></script>
 <head>
-    <title th:text="${self.name}">Chat Room View</title>
+    <title th:text="${self.name}">room name</title>
 </head>
 <body>
+<h1 th:text="${self.name}">room name</h1>
 <!-- TODO make this into a fragment and share with other room views -->
 <p>Chat</p>
 <div th:each="chat : ${chats}" class="chatline">
@@ -26,6 +28,6 @@
         <td th:text="${user.name}">The table name</td>
     </tr>
 </table>
-<a th:href="@{/room/view/__${self.lobbyId}__}" href="room/list">return to lobby</a>
+<a th:if="${self.id} != -1" th:href="@{/room/move/__${lobbyId}__/__${self.id}__/__${userId}__}" href="room/list">return to lobby</a>
 </body>
 </html>
