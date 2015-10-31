@@ -28,6 +28,6 @@
         <td th:text="${user.name}">The table name</td>
     </tr>
 </table>
-<a th:if="${self.id} != -1" th:href="@{/room/move/__${lobbyId}__/__${self.id}__/__${userId}__}" href="room/list">return to lobby</a>
+<a th:if="${self.id} != -1" th:href="@{/room/move/__${self.lobbyId}__/__${self.id}__/__${userId}__}" href="room/list">return to lobby</a>
 </body>
 </html>

@@ -153,7 +153,6 @@ public class RoomController {
         mav.addObject("isadmin", isAdmin(name));
         mav.addObject("userId", ""+user.getId());
         mav.addObject("kinds", KINDS);
-        mav.addObject("lobbyId", ""+room.getLobbyId());
 
         roomService.enterRoom(room.getId(), user.getId(), true);
         List<User> users = roomService.findUsersByRoom(room.getId(), false);
