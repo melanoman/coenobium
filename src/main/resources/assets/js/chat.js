@@ -2,7 +2,7 @@ function getNewChats() {
     $.ajax({
         type:'GET',
         dataType: 'json',
-        url: "/message/get/chat_2/3",
+        url: "/message/get/chat_"+room.id+"/"+lastChatId.toString(),
         data: { since : 5 },
         success: function(chats) {
             chats.forEach(function(chat) {
@@ -34,6 +34,8 @@ function getNewChats() {
 
                 var parent = document.getElementById("chatBlock");
                 parent.appendChild(chatline);
+
+                lastChatId = Math.max(lastChatId, chat.id);
             });
         }
     });
