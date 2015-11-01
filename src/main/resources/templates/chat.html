@@ -1,6 +1,13 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
 <link rel="stylesheet" type="text/css" th:href="@{/assets/css/chat.css}"/>
+<script th:src="@{/assets/js/jquery-2.1.4.min.js}"></script>
+<script th:inline="javascript">
+/*[+
+var lastChatId = [[${lastChatId}]];
+var room = [[${self}]];
++]*/
+</script>
 <script th:src="@{/assets/js/chat.js}"></script>
 <head>
     <title th:text="${self.name}">room name</title>
@@ -9,14 +16,17 @@
 <h1 th:text="${self.name}">room name</h1>
 <!-- TODO make this into a fragment and share with other room views -->
 <p>Chat</p>
-<div th:each="chat : ${chats}" class="chatline">
-    <span class="chatsender" th:text="${chat.text[sender]}"/>
-    <span class="chatmsg" th:text="${chat.text[msg]}"/>
+<div id="chatBlock">
+    <div th:each="chat : ${chats}" class="chatline">
+        <span class="chatsender" th:text="${chat.text[sender]}"/>
+        <span class="chatmsg" th:text="${chat.text[msg]}"/>
+    </div>
 </div>
 <form th:object="${chatText}" th:action="@{/message/post/__${chatTopic}__/__${self.id}__}" method = "post" >
     <input type = "text" th:field="*{data}"/>
     <input type="submit"/>
 </form>
+<button id="refresh" onclick="getNewChats()">refresh chat</button>
 <p>Users</p>
 <table>
     <tr>

@@ -6,6 +6,8 @@ import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -151,7 +153,7 @@ public class RoomController {
 
         mav.addObject("name", name);
         mav.addObject("isadmin", isAdmin(name));
-        mav.addObject("userId", ""+user.getId());
+        mav.addObject("userId", "" + user.getId());
         mav.addObject("kinds", KINDS);
 
         roomService.enterRoom(room.getId(), user.getId(), true);
@@ -159,9 +161,12 @@ public class RoomController {
         mav.addObject("users", users);
 
         mav.addObject("self", room);
-        mav.addObject("chats", messageService.readSince("chat_" + room.getId(), -1L));
+        List<Message> chats = messageService.readSince("chat_" + room.getId(), -1L);
+        mav.addObject("chats", chats);
         mav.addObject("chatText", emptyText());
         mav.addObject("chatTopic", "chat_" + room.getId());
+        if(chats.size() > 0) mav.addObject("lastChatId", chats.get(chats.size()-1).getId());
+        else mav.addObject("lastChatId", -1L);
 
         switch(room.getCode()) {
             case "lobby":
